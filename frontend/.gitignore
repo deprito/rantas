@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+*.egg
+installed.cfg
+*.egg
+MANIFEST
+*.env
+venv
+env/
+env.bak/
+venv.bak/
+
+# Database
+*.db
+*.db-journal
+*.sqlite3
+
+# IDE
+vscode/
+.idea/
+
+# OS
+DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+docker-compose.portainer.yml
+
+# Environment
+.env
+env.local
+
+# Logs
+*.log
+logs/
+celerybeat-schedule
+celerybeat.pid
+
+# Redis
+dump.rdb
+
+# Build outputs
+*.sql
+.browser-build-output/
+
+# Next.js
+.next/
+out/
+.next/cache/
+
+# Node
+node_modules/
+
+# Build
+*.tsbuildinfo
+next-env.d.ts
+
+# Misc
+.DS_Store

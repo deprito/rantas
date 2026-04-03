@@ -1,0 +1,66 @@
+# PhishTrack Backend - Python Dependencies
+
+# Core Framework
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Database Migrations
+alembic==1.13.1
+
+# Database
+sqlalchemy==2.0.23
+asyncpg==0.29.0
+psycopg2-binary==2.9.9
+
+# Task Queue
+celery[redis]==5.3.4
+redis==4.6.0
+flower==2.0.1
+
+# HTTP Client
+httpx==0.25.2
+
+# Certificate Transparency Log Monitoring
+certpatrol==0.1.2
+
+# WebSocket for CertStream
+websockets==12.0
+
+# DNS
+dnspython==2.4.2
+tldextract==5.1.1
+
+# WHOIS/RDAP
+python-whois==0.8.0
+
+# Email
+aiosmtplib==3.0.1
+email-validator==2.1.0
+
+# Microsoft Graph API
+azure-identity==1.16.0
+
+# Templates
+jinja2==3.1.2
+
+# Utilities
+python-dateutil==2.8.2
+
+# Authentication
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+# Monitoring
+prometheus-client==0.19.0
+
+# PDF Generation
+reportlab==4.0.8
+
+# Development (optional)
+# pytest==7.4.3
+# pytest-asyncio==0.21.1
+# black==23.12.0
+# ruff==0.1.8

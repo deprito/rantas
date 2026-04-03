@@ -1,0 +1,4 @@
+url,status,source,brand_impacted,emails_sent,created_at,updated_at,registrar,ip
+http://fake-bank.com/login,RESOLVED,internal,MyBank,2,2025-01-15 10:30:00,2025-01-15 14:30:00,GoDaddy,192.168.1.1
+http://phishing-site.com/secure,RESOLVED,internal,TargetCorp,1,2025-02-16 09:00:00,2025-02-16 16:00:00,NameCheap,10.0.0.1
+http://malicious-site.net,FAILED,public,OnlineBank,0,2025-02-17 14:20:00,2025-02-18 10:00:00,Unknown,203.0.113.1

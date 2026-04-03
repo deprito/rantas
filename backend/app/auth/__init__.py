@@ -1,0 +1,85 @@
+"""Authentication and authorization module for PhishTrack."""
+
+from app.auth.security import (
+    hash_password,
+    verify_password,
+    create_access_token,
+    decode_access_token,
+    validate_password_requirements,
+    hash_token,
+    create_user_session,
+    revoke_user_sessions,
+    revoke_session,
+    validate_session,
+    get_active_sessions,
+)
+
+from app.auth.dependencies import (
+    get_current_user,
+    get_current_active_user,
+    get_user_permissions,
+    PermissionChecker,
+    require_admin,
+    require_permission,
+    CurrentUser,
+    RequireCaseViewAny,
+    RequireCaseCreate,
+    RequireCaseUpdate,
+    RequireCaseDelete,
+    RequireCaseSendReport,
+    RequireUserViewAny,
+    RequireUserCreate,
+    RequireUserUpdate,
+    RequireUserDelete,
+    RequireConfigView,
+    RequireConfigUpdate,
+    RequireAuditView,
+)
+
+from app.auth.audit import (
+    log_audit_action,
+    get_audit_logs,
+    count_audit_logs,
+    AuditAction,
+    ResourceType,
+)
+
+__all__ = [
+    # Security
+    "hash_password",
+    "verify_password",
+    "create_access_token",
+    "decode_access_token",
+    "validate_password_requirements",
+    "hash_token",
+    "create_user_session",
+    "revoke_user_sessions",
+    "revoke_session",
+    "validate_session",
+    "get_active_sessions",
+    # Dependencies
+    "get_current_user",
+    "get_current_active_user",
+    "get_user_permissions",
+    "PermissionChecker",
+    "require_admin",
+    "CurrentUser",
+    "RequireCaseViewAny",
+    "RequireCaseCreate",
+    "RequireCaseUpdate",
+    "RequireCaseDelete",
+    "RequireCaseSendReport",
+    "RequireUserViewAny",
+    "RequireUserCreate",
+    "RequireUserUpdate",
+    "RequireUserDelete",
+    "RequireConfigView",
+    "RequireConfigUpdate",
+    "RequireAuditView",
+    # Audit
+    "log_audit_action",
+    "get_audit_logs",
+    "count_audit_logs",
+    "AuditAction",
+    "ResourceType",
+]
