@@ -6,6 +6,7 @@ Rapid Anti-phishing Network Takedown Analysis System (RANTAS) is a phishing dete
 
 - **Case Management** - Track phishing cases from submission to resolution
 - **Typosquat Detection** - Monitor certificate transparency logs for domains typosquatting your brands
+- **AI-Powered Phishing Detection** - LLM-based content analysis for social engineering, brand impersonation, and credential harvesting
 - **Email Reporting** - Send takedown notices via SMTP or Microsoft Graph API
 - **XARF Export** - Generate eXtended Abuse Reporting Format reports
 - **Dashboard & Analytics** - Visualize phishing trends and response metrics
@@ -28,6 +29,12 @@ Rapid Anti-phishing Network Takedown Analysis System (RANTAS) is a phishing dete
 ### Role Management
 
 ![Role Management](screenshot/roles-1.jpeg)
+
+### AI-Powered Analysis
+
+![AI Analysis Results](screenshot/ai-1.png)
+
+*AI analysis detects social engineering, brand impersonation, credential harvesting, and psychological manipulation tactics*
 
 ## Quick Start
 
@@ -149,6 +156,32 @@ BRAND_IMPACTED=["Example Corp","Test Corp"]
 HUNTING_MIN_SCORE=50
 HUNTING_ALERT_SCORE=80
 ```
+
+### AI-Powered Phishing Detection
+
+RANTAS includes optional AI-powered content analysis using Ollama (LLM-based detection). This feature analyzes webpage content for:
+- Social engineering tactics (urgency, threats, too-good-to-be-true offers)
+- Brand impersonation (mimicking legitimate companies)
+- Credential harvesting (passwords, credit cards, sensitive data requests)
+- Suspicious patterns (poor grammar, mismatched branding, fake security badges)
+
+**Enable AI analysis in `backend/.env`:**
+```bash
+OLLAMA_ENABLED=true
+OLLAMA_BASE_URL=https://ollama.com/api
+OLLAMA_API_KEY=your-api-key-here
+OLLAMA_MODEL=glm-5
+OLLAMA_TIMEOUT=60
+```
+
+**Using self-hosted Ollama:**
+```bash
+OLLAMA_ENABLED=true
+OLLAMA_BASE_URL=http://localhost:11434/api
+OLLAMA_MODEL=llama3.2
+```
+
+The AI analysis runs automatically on the public submission page (`/public/submit`) and displays detailed threat analysis with recommendations.
 
 ## Development
 

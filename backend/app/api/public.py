@@ -19,7 +19,9 @@ from app.utils.analyzer import (
     RiskLevel,
     quick_analyze,
     StaticURLAnalyzer,
+    URLSafetyAnalyzer,
 )
+from app.utils.ai_analyzer import ai_analyze_url
 from app.utils.timezone import now_utc
 
 
@@ -34,6 +36,7 @@ class AnalyzeRequest(BaseModel):
 
     url: str = Field(..., description="URL to analyze", min_length=1, max_length=2048)
     deep: bool = Field(False, description="Perform deep analysis (DNS/HTTP checks)")
+    use_ai: bool = Field(False, description="Use AI-powered content analysis (requires Ollama)")
 
     @field_validator("url")
     @classmethod
@@ -55,6 +58,7 @@ class QuickAnalysisResponse(BaseModel):
     message: str
     quick_flags: list[str]
     analysis_id: Optional[str] = None
+    ai_analysis: Optional[dict] = None  # AI analysis results if use_ai=True
 
 
 class PublicSubmitRequest(BaseModel):
@@ -125,17 +129,49 @@ async def analyze_url(
     Performs comprehensive URL safety analysis including:
     - Static analysis: URL structure, TLD checks, keyword detection
     - Deep analysis (if requested): DNS lookups, HTTP checks, domain intelligence
+    - AI analysis (if requested): LLM-powered content analysis via Ollama
 
     Args:
         request: FastAPI request object
-        data: Analysis request with URL and deep analysis flag
+        data: Analysis request with URL, deep analysis flag, and AI flag
 
     Returns:
         QuickAnalysisResponse with risk score, level, and detected flags
     """
     try:
-        # Run the analysis
+        # Run the base analysis
         result = await quick_analyze(data.url, deep=data.deep)
+
+        # AI analysis if requested and enabled
+        ai_analysis = None
+        if data.use_ai and settings.OLLAMA_ENABLED:
+            try:
+                ai_score, ai_flags, ai_details = await ai_analyze_url(data.url)
+                ai_analysis = {
+                    "enabled": True,
+                    "score": ai_score,
+                    "flags": ai_flags,
+                    "details": ai_details,
+                }
+
+                # Merge AI flags with rule-based flags
+                if ai_flags and ai_details.get("is_phishing"):
+                    result.quick_flags.extend([f"AI: {flag}" for flag in ai_flags])
+                    # Boost score if AI detected phishing
+                    if ai_score > result.score:
+                        result.score = min(100, int((result.score + ai_score) / 2) + 10)
+
+            except Exception as ai_error:
+                print(f"AI analysis failed (non-fatal): {ai_error}")
+                ai_analysis = {"enabled": True, "error": str(ai_error)}
+
+        # Recalculate risk level and can_submit based on updated score
+        analyzer = URLSafetyAnalyzer(enable_deep_analysis=False)
+        new_risk_level = analyzer._get_risk_level(result.score, result.quick_flags)
+        new_message = analyzer._generate_message(new_risk_level, result.quick_flags)
+        result.risk_level = new_risk_level
+        result.can_submit = new_risk_level in [RiskLevel.MEDIUM, RiskLevel.HIGH, RiskLevel.CRITICAL]
+        result.message = new_message
 
         return QuickAnalysisResponse(
             url=result.url,
@@ -145,6 +181,7 @@ async def analyze_url(
             message=result.message,
             quick_flags=result.quick_flags,
             analysis_id=result.analysis_id,
+            ai_analysis=ai_analysis,
         )
 
     except Exception as e:

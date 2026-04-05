@@ -29,6 +29,7 @@ import {
   Activity,
   Globe,
   Server,
+  Brain,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
@@ -72,8 +73,8 @@ export default function PublicSubmitPage() {
     setIsChecking(true);
     setError(null);
     try {
-      // Use the new deep analyzer
-      const result = await api.analyzeUrl(urlToCheck, true);
+      // Use deep analyzer with AI-powered content analysis
+      const result = await api.analyzeUrl(urlToCheck, true, true);
       setAnalysis(result);
       setHasChecked(true);
     } catch (err) {
@@ -373,7 +374,12 @@ export default function PublicSubmitPage() {
                       </p>
                       <div className="flex flex-wrap gap-1">
                         {analysis.quick_flags.slice(0, 6).map((flag, i) => (
-                          <Badge key={i} variant="outline" className="text-xs py-0 px-2">
+                          <Badge
+                            key={i}
+                            variant="outline"
+                            className={`text-xs py-0 px-2 ${flag.startsWith('AI:') ? 'bg-purple-50 dark:bg-purple-950/20 border-purple-300 dark:border-purple-800 text-purple-700 dark:text-purple-300' : ''}`}
+                          >
+                            {flag.startsWith('AI:') && <span className="mr-1">🤖</span>}
                             {flag}
                           </Badge>
                         ))}
@@ -383,6 +389,27 @@ export default function PublicSubmitPage() {
                           </Badge>
                         )}
                       </div>
+                    </div>
+                  )}
+
+                  {/* AI Analysis Details */}
+                  {analysis.ai_analysis && analysis.ai_analysis.enabled && !analysis.ai_analysis.error && (
+                    <div className="mt-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg p-3 border border-purple-200 dark:border-purple-800">
+                      <p className="text-xs font-semibold mb-2 flex items-center gap-1 text-purple-800 dark:text-purple-300">
+                        🤖 AI Analysis
+                      </p>
+                      {analysis.ai_analysis.details && (
+                        <>
+                          <p className="text-xs text-purple-700 dark:text-purple-400 mb-2">
+                            {analysis.ai_analysis.details.analysis || 'No detailed analysis available'}
+                          </p>
+                          {analysis.ai_analysis.details.recommendation && (
+                            <p className="text-xs text-purple-600 dark:text-purple-500 italic">
+                              💡 {analysis.ai_analysis.details.recommendation}
+                            </p>
+                          )}
+                        </>
+                      )}
                     </div>
                   )}
                 </CardContent>
@@ -398,7 +425,8 @@ export default function PublicSubmitPage() {
                 </CardTitle>
                 <CardDescription>
                   Our advanced analyzer will perform deep security checks including
-                  DNS analysis, SSL verification, domain age checks, and reputation lookups.
+                  DNS analysis, SSL verification, domain age checks, reputation lookups,
+                  and AI-powered content analysis for phishing detection.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -551,6 +579,13 @@ export default function PublicSubmitPage() {
                     <div>
                       <p className="font-medium text-foreground">Reputation Check</p>
                       <p className="text-xs">Blacklists, threat feeds, security vendors</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2 md:col-span-2">
+                    <Brain className="h-4 w-4 mt-0.5 text-indigo-500" />
+                    <div>
+                      <p className="font-medium text-foreground">AI-Powered Analysis</p>
+                      <p className="text-xs">LLM-based content analysis for social engineering, brand impersonation, and phishing patterns</p>
                     </div>
                   </div>
                 </div>

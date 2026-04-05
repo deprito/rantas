@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2026-03-01
 
 ### Added
+- **AI-Powered Phishing Detection**: LLM-based content analysis for public URL submissions
+  - New `backend/app/utils/ai_analyzer.py` module with `AIPhishingAnalyzer` class
+  - Uses Ollama Cloud API (or self-hosted Ollama) for AI analysis
+  - Detects social engineering, brand impersonation, credential harvesting, and psychological manipulation
+  - Returns detailed analysis with threat types, confidence score, and recommendations
+  - AI flags merged with rule-based flags (prefixed with "AI:") in analysis results
+  - Configurable via new environment variables:
+    - `OLLAMA_ENABLED` - Enable/disable AI analysis
+    - `OLLAMA_BASE_URL` - Ollama API endpoint
+    - `OLLAMA_API_KEY` - API key for Ollama Cloud
+    - `OLLAMA_MODEL` - Model to use (default: llama3.2)
+    - `OLLAMA_TIMEOUT` - Request timeout in seconds
+  - Frontend displays AI analysis with 🤖 emoji badge and detailed recommendations
+  - Public submission page (`/public/submit`) now includes AI-powered content analysis by default
 - **Docker Healthchecks**: Added healthchecks for Celery services in `docker-compose.ghcr.yml` and `stack_file.yml`
   - `celery-worker`: Uses `celery inspect ping` to verify worker responsiveness
   - `celery-beat`: Simple pass-through check (ps/pgrep not available in container)

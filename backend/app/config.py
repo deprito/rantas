@@ -175,6 +175,13 @@ class Settings(BaseSettings):
     REDIS_PORT: int = int(os.getenv("REDIS_PORT", "6379"))
     REDIS_DB: int = int(os.getenv("REDIS_DB", "0"))
 
+    # Ollama AI Configuration
+    OLLAMA_ENABLED: bool = os.getenv("OLLAMA_ENABLED", "false").lower() == "true"
+    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "https://ollama.com/api")
+    OLLAMA_API_KEY: str = os.getenv("OLLAMA_API_KEY", "")
+    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "llama3.2")
+    OLLAMA_TIMEOUT: int = int(os.getenv("OLLAMA_TIMEOUT", "60"))
+
     class Config:
         env_file = ".env"
         case_sensitive = True
